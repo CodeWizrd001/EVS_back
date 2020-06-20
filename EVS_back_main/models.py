@@ -1,3 +1,13 @@
 from django.db import models
+from mongoengine import Document
+from mongoengine import StringField , FloatField
 
-# Create your models here.
+class Radiation(Document) :
+    rUID = StringField(unique=True,required=True)
+    rIns = FloatField() 
+    rMin = FloatField()
+    rMax = FloatField()
+    rAvg = FloatField()
+    rCountry = StringField()
+
+    meta = {'collection':'Radiation'}

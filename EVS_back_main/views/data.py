@@ -38,7 +38,6 @@ def getCountry(country) :
         'max' : [] ,
         'min' : [] ,
         'avg' : [] ,
-        'length' : len(countriesData),
     }
     for radiation in countriesData :
         countryData['ins'].append(radiation.rIns)

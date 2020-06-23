@@ -3,7 +3,7 @@ from mongoengine import Document
 from mongoengine import StringField , FloatField
 
 class Radiation(Document) :
-    rUID = StringField(unique=True,required=True)
+    rUID = StringField(required=True)
     rIns = FloatField() 
     rMin = FloatField()
     rMax = FloatField()
@@ -11,3 +11,13 @@ class Radiation(Document) :
     rCountry = StringField()
 
     meta = {'collection':'Radiation'}
+
+    def toDict(self) :
+        return {
+            'id' : self.rUID ,
+            'ins' : self.rIns ,
+            'min' : self.rMin ,
+            'avg' : self.rAvg ,
+            'max' : self.rMax ,
+            'Country' : self.rCountry
+        }

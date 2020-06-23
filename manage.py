@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import pymongo
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "EVS_back.settings")
@@ -19,4 +20,14 @@ if __name__ == "__main__":
                 "forget to activate a virtual environment?"
             )
         raise
+    if sys.argv[1]=="clear_db" :
+        client = pymongo.MongoClient()
+        print("Confirm Clear Database (Y/N)")
+        conf = input()
+        if conf == 'Y' :
+            client.drop_database('EVS_back')
+            print("[+] DataBase Cleared")
+        else :
+            print("[!] Process Aborted")
+        exit()
     execute_from_command_line(sys.argv)

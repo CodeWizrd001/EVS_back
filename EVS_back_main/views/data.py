@@ -49,30 +49,19 @@ def getCountry(country) :
 @api_view(["POST"])
 def addData(request) :
     body = json.loads(request.body)
-    try :
-        cur = Radiation.objects.get(rUID=body['id'])
-    except :
-        cur = None
-    if cur != None :
-        cur.update(set__rIns=body['data'])
-        cur.update(set__rMax=body['max'])
-        cur.update(set__rMin=body['min'])
-        cur.update(set__rAvg=body['avg'])
-    else :
-        cur = Radiation(
-            rUID=body['id'] ,
-            rIns=body['data'],
-            rMax=body['max'],
-            rMin=body['min'],
-            rAvg=body['avg'],
-            rCountry=pycountry.countries.get(alpha_2=body['locale']).name,
+    cur = Radiation(
+        rUID=body['id'] ,
+        rIns=body['data'],
+        rMax=body['max'],
+        rMin=body['min'],
+        rAvg=body['avg'],
+        rCountry=pycountry.countries.get(alpha_2=body['locale']).name, 
         )
-        cur.save()
+    cur.save()
     return Response({"STATUS":SUCCESS}) 
 
 @api_view(["POST"])
 def getData(request) :
-    body = json.loads(request.body)
     client = pymongo.MongoClient()
     db = client[MONGO_NAME]
     collection = db['Radiation']
@@ -86,4 +75,26 @@ def getData(request) :
 
 @api_view(["POST"])
 def getDataByCountry(request,country) :
+    country = pycountry.countries.get(alpha_2=country).name
     return Response(getCountry(country))
+
+@api_view(["POST"])
+def getDataById(request,id) :
+    data = Radiation.objects(rUID=id)
+    retData = {
+        'id':id ,
+        'ins' : [] ,
+        'min' : [] ,
+        'avg' : [] ,
+        'max' : [] ,
+        'Country': '',
+    } 
+    for i in data :
+        dictData = i.toDict()
+        retData['ins'].append(dictData['ins'])
+        retData['min'].append(dictData['min'])
+        retData['avg'].append(dictData['avg'])
+        retData['max'].append(dictData['max'])
+    if data != [] :
+        retData['Country'] = data[0].rCountry
+    return Response(retData)

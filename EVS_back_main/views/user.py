@@ -14,10 +14,38 @@ import time
 from EVS_back_main import *
 
 # Authentication Imports
-from django.contrib.auth.decorators import login_required , permission_required
-from django.contrib.auth import login , logout , authenticate
 from ..utils import check_logged_in
 
 # Exception Imports
 from django.http.request import RawPostDataException
 from django.db.utils import IntegrityError
+
+# Model Imports
+from EVS_back_main.models import User
+
+@api_view(['POST']) 
+def getUser(request) : 
+    data = request.data 
+    uid = data['uid']
+    try :
+        user = User.objects.get(uUID=uid)
+    except User.DoesNotExist :
+        user = User(
+            uUID=uid
+        )
+        user.save()
+    except :
+        raise 
+    return Response(user.toDict())
+
+@api_view(['POST']) 
+def updateCoins(request) :
+    data = request.data 
+    uid = data['id']
+    try :
+        user = User.objects.get(uUID=uid)
+    except :
+        raise 
+    user.uCoins = data['coins'] 
+    user.save() 
+    return Response({})

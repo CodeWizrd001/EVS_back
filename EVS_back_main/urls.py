@@ -5,5 +5,7 @@ urlpatterns = [
     path("add",data.addData),
     path("get",data.getData),
     path("get/<str:country>",data.getDataByCountry),
-    path("getMy/<str:id>",data.getDataById)
+    path("getMy/<str:id>",data.getDataById),
+    path("getuser",user.getUser),
+    path("coins",user.updateCoins)
 ]
